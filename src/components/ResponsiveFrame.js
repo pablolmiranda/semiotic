@@ -14,12 +14,16 @@ const createResponsiveFrame = Frame =>
     }
 
     static propTypes = {
-      size: PropTypes.array
+      size: PropTypes.array,
+      heightAttribute: PropTypes.oneOf(["offsetHeight", "clientHeight"]),
+      widthAttribute: PropTypes.oneOf(["offsetWidth", "clientWidth"])
     }
 
     static defaultProps = {
       size: [500, 500],
-      debounce: 200
+      debounce: 200,
+      heightAttribute: "offsetHeight",
+      widthAttribute: "offsetWidth"
     }
 
     static displayName = `Responsive${Frame.displayName}`
@@ -31,6 +35,7 @@ const createResponsiveFrame = Frame =>
     }
     componentDidMount() {
       const element = this.node
+      const { heightAttribute, widthAttribute } = this.props
 
       elementResizeEvent(element, () => {
         window.clearTimeout(this.isResizing)
@@ -38,14 +43,14 @@ const createResponsiveFrame = Frame =>
           this.isResizing = false
 
           this.setState({
-            containerHeight: element.offsetHeight,
-            containerWidth: element.offsetWidth
+            containerHeight: element[heightAttribute],
+            containerWidth: element[widthAttribute]
           })
         }, this.props.debounce)
       })
       this.setState({
-        containerHeight: element.offsetHeight,
-        containerWidth: element.offsetWidth
+        containerHeight: element[heightAttribute],
+        containerWidth: element[widthAttribute]
       })
     }
 
